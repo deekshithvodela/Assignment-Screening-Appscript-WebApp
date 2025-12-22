@@ -57,6 +57,8 @@ A Rubric sheet will be generated automatically with:
 ## FootNotes
 Author: V Deekshith
 
-Sample Link of Accept Reject Rubric: [AR Rubric](https://script.google.com/macros/s/AKfycbzljyKnad34WoU9rB5XjvqC2502QKbQW2Mvar8sNtVwymc8mFLb81pfKKlqZwWcJQQ/exec)
+Sample Images of Google Spreadsheet set-up: [Gsheet](screenshots/gsheet_images/)
 
-Sample Link of Points Rubric: [Points Rubric](https://script.google.com/macros/s/AKfycby2UWqu-vj4zJ77c6KQF3ccEIDRqd5uJD25vrgUU-1hFUj6zyIJuxwTyu-ZRbhJfsRv/exec)
+Sample Images of Accept Reject Rubric: [AR Rubric](screenshots/version_2_images/ARR_with_reevaluate.png)
+
+Sample Images of Points Rubric: [Points Rubric](screenshots/version_2_images/points_rubric.png)

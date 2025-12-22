@@ -1,4 +1,32 @@
-### Assignment Screening AppScript WebApp
+# Assignment Screening AppScript WebApp
+
+## Folder Tree
+```text
+Assignment-Screening-Appscript-WebApp/
+├── accept_reject_rubric_with_reevaluate/
+│   ├── Code.gs
+│   └── Index.html
+├── accept_reject_rubric_without_reevaluate/
+│   ├── Code.gs
+│   └── Index.html
+├── points_rubric/
+│   ├── Code.gs
+│   └── Index.html
+├── screenshots/
+│   ├── gsheet_images/
+│   │   ├── source_sheet.png
+│   │   └── rubric_sheet.png
+│   ├── version_1_images/
+│   │   ├── ARR_MobileView.jpeg
+│   │   └── ARR_WindowsView.png
+│   ├── version_2_images/
+│   │   ├── ARR_with_reevaluate.png
+│   │   └── points_rubric.png
+│   └── Ideation.png
+├── README.md
+└── normalise_drive_url.gs
+```
+
 
 ## Introduction
 This is an assignment screening Appscript Webapp used with GoogleSheets file for easy screening of assignments submitted through GoogleForms.
@@ -55,10 +83,11 @@ A Rubric sheet will be generated automatically with:
 - Column D: Decision (in ARR); Rubric Criteria (in Points Rubric)
 
 ## FootNotes
-Author: V Deekshith
+Author: [V Deekshith](mailto:deekshithvodela@gmail.com)
 
 Sample Images of Google Spreadsheet set-up: [Gsheet](screenshots/gsheet_images/)
 
 Sample Images of Accept Reject Rubric: [AR Rubric](screenshots/version_2_images/ARR_with_reevaluate.png)
 
 Sample Images of Points Rubric: [Points Rubric](screenshots/version_2_images/points_rubric.png)
+

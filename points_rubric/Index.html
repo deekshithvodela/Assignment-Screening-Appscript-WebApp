@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <title>Document Review & Rubric Scoring</title>
+  <style>
+    :root {
+      --primary: #1f7e8c;
+      --primary-light: #32b8c6;
+      --background: #f5f5f5;
+      --surface: #ffffff;
+      --text: #134252;
+      --border: #e0e0e0;
+      --success: #2ecc71;
+      --error: #e74c3c;
+      --warning: #f39c12;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: auto;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 20px;
+    }
+
+    .container.mobile-mode {
+      display: flex !important;
+      flex-direction: column !important;
+      grid-template-columns: unset !important;
+      gap: 12px !important;
+      max-width: none !important;
+      width: 100% !important;
+      margin: 0 !important;
+    }
+
+    .preview-section {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .container.mobile-mode .preview-section {
+      padding: 12px !important;
+      margin-bottom: 0 !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
+      flex-basis: 100% !important;
+    }
+
+    .preview-header {
+      margin-bottom: 15px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .preview-header h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+      color: var(--text);
+    }
+
+    .preview-meta {
+      display: flex;
+      gap: 15px;
+      font-size: 12px;
+      color: #666;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+
+    .preview-meta span {
+      display: flex;
+      align-items: center;
+    }
+
+    .preview-meta strong {
+      color: var(--text);
+      margin-right: 4px;
+    }
+
+    .preview-container {
+      flex: 1;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+      background: #f9f9f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 400px;
+    }
+
+    .container.mobile-mode .preview-container {
+      min-height: 300px !important;
+      flex: none !important;
+      height: 300px !important;
+    }
+
+    .preview-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .no-preview {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .navigation {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background: var(--primary-light);
+      color: white;
+      border-color: var(--primary-light);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .details-panel {
+      background: var(--surface);
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+    }
+
+    .container.mobile-mode .details-panel {
+      max-height: none !important;
+      overflow-y: visible !important;
+      padding: 12px !important;
+      width: 100% !important;
+      min-width: 100% !important;
+      max-width: 100% !important;
+      margin-top: 0 !important;
+      flex: 0 0 100% !important;
+      flex-basis: 100% !important;
+    }
+
+    .details-header {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: var(--text);
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 10px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-badge.pending {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+
+    .status-badge.completed {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .rubric-section {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+
+    .container.mobile-mode .rubric-section {
+      overflow-y: visible !important;
+      max-height: none !important;
+      flex: none !important;
+      margin-bottom: 12px !important;
+    }
+
+    .rubric-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .rubric-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .rubric-item:last-child {
+      border-bottom: none;
+    }
+
+    .rubric-label {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--text);
+      display: block;
+    }
+
+    .score-buttons {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+    }
+
+    .score-btn {
+      padding: 8px 6px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .score-btn:hover {
+      border-color: var(--primary);
+      background: #f0f8fa;
+    }
+
+    .score-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: auto;
+    }
+
+    .submit-btn:hover {
+      background: var(--text);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .re-eval-btn {
+      width: 100%;
+      padding: 12px;
+      background: #888;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 8px;
+    }
+
+    .re-eval-btn:hover {
+      background: #666;
+    }
+
+    .re-eval-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 13px;
+      margin-bottom: 10px;
+      display: none;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .message.success {
+      display: block;
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .message.error {
+      display: block;
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+
+    .message.info {
+      display: block;
+      background: #d1ecf1;
+      color: #0c5460;
+      border: 1px solid #bee5eb;
+    }
+
+    .progress-indicator {
+      font-size: 12px;
+      color: #999;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .debug-info {
+      font-size: 11px;
+      color: #999;
+      margin-top: 10px;
+      padding: 8px;
+      background: #f5f5f5;
+      border-radius: 4px;
+      font-family: monospace;
+      max-height: 60px;
+      overflow-y: auto;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: var(--primary);
+    }
+
+    .spinner {
+      border: 3px solid var(--border);
+      border-top: 3px solid var(--primary);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .rubric-section::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .rubric-section::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 3px;
+    }
+
+    .rubric-section::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 3px;
+    }
+
+    .rubric-section::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="mainContainer">
+    <div class="preview-section">
+      <div class="preview-header">
+        <h2 id="docTitle">Drive Preview</h2>
+        <div class="preview-meta">
+          <span id="docEmail"></span>
+          <span id="docDepartment"></span>
+        </div>
+      </div>
+      <div class="preview-container" id="previewContainer">
+        <div class="loading">
+          <div class="spinner"></div>
+          <p>Loading documents...</p>
+        </div>
+      </div>
+      <div class="navigation">
+        <button class="nav-btn" id="prevBtn" type="button">← Previous</button>
+        <button class="nav-btn" id="nextBtn" type="button">Next →</button>
+      </div>
+    </div>
+
+    <div class="details-panel">
+      <div class="details-header">Rubric Scoring</div>
+      <div id="statusBadge" class="status-badge pending">Pending</div>
+      <div id="messageBox" class="message"></div>
+      
+      <div class="rubric-section" id="rubricContainer">
+        <p style="text-align: center; color: #999;">Loading rubric criteria...</p>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" type="button">Submit Scores</button>
+      <button class="re-eval-btn" id="reEvalBtn" type="button">Re-evaluate</button>
+      <div class="progress-indicator" id="progressIndicator"></div>
+    </div>
+  </div>
+
+  <script>
+    'use strict';
+    
+    let documents = [];
+    let currentIndex = 0;
+    let scores = {};
+    let criteria = [];
+    let isMobileMode = false;
+    let mobileModeLocked = false;
+
+    function checkResponsive() {
+      const container = document.getElementById('mainContainer');
+      const width = window.innerWidth;
+      
+      if (width <= 600) {
+        isMobileMode = true;
+        mobileModeLocked = true;
+      }
+      
+      if (mobileModeLocked) {
+        container.classList.add('mobile-mode');
+      } else {
+        container.classList.remove('mobile-mode');
+      }
+    }
+
+    function log(message) {
+      const debugEl = document.getElementById('debugInfo');
+      if (debugEl) {
+        const currentText = debugEl.textContent;
+        const lines = currentText.split('\n').slice(-2);
+        lines.push(message);
+        debugEl.textContent = lines.join('\n');
+      }
+    }
+
+    function updateStatusBadge() {
+      const statusEl = document.getElementById('statusBadge');
+      const doc = documents[currentIndex];
+      const isCompleted = doc.status && doc.status.trim().toLowerCase() === 'completed';
+      
+      if (isCompleted) {
+        statusEl.className = 'status-badge completed';
+        statusEl.textContent = 'Completed';
+        document.getElementById('submitBtn').disabled = true;
+      } else {
+        statusEl.className = 'status-badge pending';
+        statusEl.textContent = 'Pending';
+        document.getElementById('submitBtn').disabled = false;
+      }
+    }
+
+    function init() {
+      log('Initializing app...');
+      showMessage('Loading documents from Google Sheet...', 'info');
+      
+      google.script.run
+        .withSuccessHandler(function(docs) {
+          log('Loaded ' + docs.length + ' documents');
+          documents = docs;
+          
+          if (documents && documents.length > 0) {
+            showMessage('', 'info');
+            loadDocument(0);
+          } else {
+            showMessage('No documents found in Source sheet. Please add data with columns: Name, Email, Phone, Department, Drive Link, Status, Rubric Criteria', 'error');
+            document.getElementById('previewContainer').innerHTML = 
+              '<div class="no-preview">No documents found in Source sheet.<br><br>' +
+              '<strong>Required columns:</strong><br>' +
+              'A: Name | B: Email | C: Phone | D: Department | E: Drive Link | F: Status | G: Rubric Criteria</div>';
+          }
+        })
+        .withFailureHandler(function(error) {
+          log('ERROR: ' + error);
+          showMessage('Error loading documents: ' + error, 'error');
+        })
+        .getDocuments();
+    }
+
+    function loadDocument(index) {
+      if (index < 0 || index >= documents.length) {
+        log('Invalid index: ' + index);
+        return;
+      }
+
+      currentIndex = index;
+      const doc = documents[index];
+      log('Loading: ' + doc.name + ' (' + (index + 1) + '/' + documents.length + ')');
+
+      document.getElementById('docTitle').textContent = doc.name;
+      
+      const emailHTML = doc.email ? '<strong>Email:</strong> ' + doc.email : '';
+      const deptHTML = doc.department ? '<strong>Department:</strong> ' + doc.department : '';
+      
+      document.getElementById('docEmail').innerHTML = emailHTML;
+      document.getElementById('docDepartment').innerHTML = deptHTML;
+
+      google.script.run
+        .withSuccessHandler(function(previewUrl) {
+          const container = document.getElementById('previewContainer');
+          
+          if (previewUrl) {
+            container.innerHTML = '<iframe src="' + previewUrl + '"></iframe>';
+          } else {
+            container.innerHTML = '<div class="no-preview">Unable to preview this document</div>';
+          }
+        })
+        .withFailureHandler(function(error) {
+          log('Preview error: ' + error);
+        })
+        .getPreviewUrl(doc.driveLink);
+
+      criteria = doc.rubricCriteria.split(',').map(function(c) { return c.trim(); });
+      scores = {};
+      criteria.forEach(function(c) { scores[c] = ''; });
+
+      renderRubric();
+
+      document.getElementById('progressIndicator').textContent = 
+        'Document ' + (index + 1) + ' of ' + documents.length;
+
+      document.getElementById('prevBtn').disabled = (index === 0);
+      document.getElementById('nextBtn').disabled = (index === documents.length - 1);
+      
+      updateStatusBadge();
+      clearMessage();
+    }
+
+    function renderRubric() {
+      const container = document.getElementById('rubricContainer');
+      let html = '<div class="rubric-title">Scoring Rubric (1–10 per criterion)</div>';
+
+      criteria.forEach(function(criterion) {
+        const current = scores[criterion] || '';
+        html += '<div class="rubric-item">' +
+          '<label class="rubric-label">' + criterion + '</label>' +
+          '<div class="score-buttons">';
+
+        for (let i = 1; i <= 10; i++) {
+          html += '<button class="score-btn ' + (current === String(i) ? 'active' : '') + '" ' +
+            'type="button" data-criterion="' + criterion + '" data-score="' + i + '">' +
+            i +
+            '</button>';
+        }
+
+        html += '</div>' +
+          '</div>';
+      });
+
+      container.innerHTML = html;
+
+      const buttons = container.querySelectorAll('.score-btn');
+      buttons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          const criterion = this.getAttribute('data-criterion');
+          const score = this.getAttribute('data-score');
+          setScore(criterion, score);
+        });
+      });
+    }
+
+    function setScore(criterion, value) {
+      scores[criterion] = value;
+      renderRubric();
+    }
+
+    function previousDocument() {
+      if (currentIndex > 0) {
+        loadDocument(currentIndex - 1);
+      }
+    }
+
+    function nextDocument() {
+      if (currentIndex < documents.length - 1) {
+        loadDocument(currentIndex + 1);
+      }
+    }
+
+    function submitScores() {
+      const doc = documents[currentIndex];
+      const allScored = criteria.every(function(c) { return scores[c] !== ''; });
+
+      if (!allScored) {
+        showMessage('Please score all criteria before submitting', 'error');
+        return;
+      }
+
+      document.getElementById('submitBtn').disabled = true;
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          document.getElementById('submitBtn').disabled = false;
+          
+          if (result.success) {
+            doc.status = 'Completed';
+            updateStatusBadge();
+            
+            showMessage('Scores saved! Moving to next document...', 'success');
+            setTimeout(function() {
+              clearMessage();
+              nextDocument();
+            }, 1500);
+          } else {
+            showMessage('Error: ' + result.message, 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          document.getElementById('submitBtn').disabled = false;
+          showMessage('Error: ' + error, 'error');
+        })
+        .saveRubricScores(doc.email, doc.phone, doc.name, scores, criteria.join(','), doc.rowIndex);
+    }
+
+    function reEvaluateCurrent() {
+      const doc = documents[currentIndex];
+
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result.success) {
+            doc.status = 'Pending';
+            updateStatusBadge();
+
+            criteria.forEach(function(c) { scores[c] = ''; });
+            renderRubric();
+            showMessage('Scores cleared. You can re-evaluate this abstract.', 'info');
+          } else {
+            showMessage('Error: ' + result.message, 'error');
+          }
+        })
+        .withFailureHandler(function(error) {
+          showMessage('Error: ' + error, 'error');
+        })
+        .clearRubricScores(doc.email, doc.rowIndex);
+    }
+
+    function showMessage(text, type) {
+      const box = document.getElementById('messageBox');
+      if (text) {
+        box.textContent = text;
+        box.className = 'message ' + type;
+      }
+    }
+
+    function clearMessage() {
+      document.getElementById('messageBox').className = 'message';
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      log('📱 DOM ready - checking responsive');
+      checkResponsive();
+      
+      window.addEventListener('orientationchange', function() {
+        setTimeout(checkResponsive, 100);
+      });
+      
+      document.getElementById('prevBtn').addEventListener('click', previousDocument);
+      document.getElementById('nextBtn').addEventListener('click', nextDocument);
+      document.getElementById('submitBtn').addEventListener('click', submitScores);
+      document.getElementById('reEvalBtn').addEventListener('click', reEvaluateCurrent);
+      
+      init();
+    });
+  </script>
+</body>
+</html>

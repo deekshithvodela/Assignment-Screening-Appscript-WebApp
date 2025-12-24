@@ -3,28 +3,28 @@
 ## Folder Tree
 ```text
 Assignment-Screening-Appscript-WebApp/
-├── accept_reject_rubric_with_reevaluate/
+├── accept-reject-rubric-with-reevaluate/
 │   ├── Code.gs
 │   └── Index.html
-├── accept_reject_rubric_without_reevaluate/
+├── accept-reject-rubric-without-reevaluate/
 │   ├── Code.gs
 │   └── Index.html
-├── points_rubric/
+├── points-rubric/
 │   ├── Code.gs
 │   └── Index.html
 ├── screenshots/
-│   ├── gsheet_images/
-│   │   ├── source_sheet.png
-│   │   └── rubric_sheet.png
-│   ├── version_1_images/
-│   │   ├── ARR_MobileView.jpeg
-│   │   └── ARR_WindowsView.png
-│   ├── version_2_images/
-│   │   ├── ARR_with_reevaluate.png
-│   │   └── points_rubric.png
-│   └── Ideation.png
+│   ├── gsheet-images/
+│   │   ├── source-sheet.png
+│   │   └── rubric-sheet.png
+│   ├── version-1-images/
+│   │   ├── arr-mobile-view.jpeg
+│   │   └── arr-windows-view.png
+│   ├── version-2-images/
+│   │   ├── arr-with-reevaluate.png
+│   │   └── points-rubric.png
+│   └── ideation.png
 ├── README.md
-└── normalise_drive_url.gs
+└── normalise-drive-url.gs
 ```
 
 
@@ -45,7 +45,7 @@ But, to be more unbiased about screening, selecting Rubric criteria such as
 can hep standardise and eliminate bias to some extent.
 
 ## Primary GoogleSheet Set-up
-The GoogleSheet should have a sheet named 'Source' with the following columns:
+The GoogleSheet should have a sheet named 'Source' with the following columns: (case sensitive)
 - Column A: Name
 - Column B: Email
 - Column C: Phone
@@ -55,10 +55,14 @@ The GoogleSheet should have a sheet named 'Source' with the following columns:
 
 This sheet is the source of the information for our WebApp. This information will be used for displaying details on the WebApp. Make sure you Upload correct details here.
 
+## Setting-up Appscript files
+- Copy paste code from Code.gs file from your preferred version to your google spreadsheet's Code.gs file.
+- Create a new 'Index.html' file (case sensitive) from the appscript dashboard. Copy paste html code.
+
 ## Formating Google Drive link for preview
 Incase the drive link is of format other than:
 " https://drive.google.com/file/d/${fileId}/preview '
-Run normalise_drive_url.gs appscript. This is a manual trigger Appscript. It captures drive Id and normalises the link as above.
+Run normalise-drive-url.gs appscript. This is a manual trigger Appscript. It captures drive Id and normalises the link as above.
 
 ## Deployment
 Now Deploy the Appscript as a new WebApp and use the generated URL for Screening. Donot run the html file independently as the data in GoogleSheets cannot be accessed that way.
@@ -85,9 +89,9 @@ A Rubric sheet will be generated automatically with:
 ## FootNotes
 Author: [V Deekshith](mailto:deekshithvodela@gmail.com)
 
-Sample Images of Google Spreadsheet set-up: [Gsheet](screenshots/gsheet_images/)
+Sample Images of Google Spreadsheet set-up: [Gsheet](screenshots/gsheet-images/)
 
-Sample Images of Accept Reject Rubric: [AR Rubric](screenshots/version_2_images/ARR_with_reevaluate.png)
+Sample Images of Accept Reject Rubric: [AR Rubric](screenshots/version-2-images/arr-with-reevaluate.png)
 
-Sample Images of Points Rubric: [Points Rubric](screenshots/version_2_images/points_rubric.png)
+Sample Images of Points Rubric: [Points Rubric](screenshots/version-2-images/points-rubric.png)
 
